@@ -7,5 +7,4 @@ require (
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/gofiber/fiber/v2 v2.0.1
 	github.com/jeffotoni/gconcat v0.0.4
-	github.com/watson-developer-cloud/go-sdk v1.7.0
 )

@@ -7,11 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/jeffotoni/gconcat"
-	"github.com/watson-developer-cloud/go-sdk/common"
-	"github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
-	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 	"io"
-
+	"runtime"
 
 	"math"
 	"os"
@@ -66,11 +63,11 @@ func main() {
 				ApiKey: os.Getenv("APIKEY_BEHINDCODE8"),
 			}
 
-			options := &speechtotextv1.SpeechToTextV1Options{
+			options := &SpeechToTextV1Options{
 				Authenticator: authenticator,
 			}
 
-			speechToText, speechToTextErr := speechtotextv1.NewSpeechToTextV1(options)
+			speechToText, speechToTextErr := NewSpeechToTextV1(options)
 
 			if speechToTextErr != nil {
 				return c.Status(500).SendString("deu ruim")
@@ -85,7 +82,7 @@ func main() {
 			audioFile=file1
 
 			result, _, responseErr := speechToText.Recognize(
-				&speechtotextv1.RecognizeOptions{
+				&RecognizeOptions{
 					Audio:       audioFile,
 					ContentType: core.StringPtr("application/octet-stream"),
 					Model:       core.StringPtr("pt-BR_BroadbandModel"),
@@ -109,12 +106,12 @@ func main() {
 			ApiKey: os.Getenv("APIKEY1_BEHINDCODE8"),
 		}
 
-		options1 := &naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+		options1 := &NaturalLanguageUnderstandingV1Options{
 			Version:       "2020-09-17",
 			Authenticator: authenticator1,
 		}
 
-		naturalLanguageUnderstanding, naturalLanguageUnderstandingErr := naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(options1)
+		naturalLanguageUnderstanding, naturalLanguageUnderstandingErr := NewNaturalLanguageUnderstandingV1(options1)
 
 		if naturalLanguageUnderstandingErr != nil {
 			fmt.Println("ERROR:", naturalLanguageUnderstandingErr)
@@ -124,10 +121,10 @@ func main() {
 		id := os.Getenv("MODELOID")
 
 		result1, _, responseErr1 := naturalLanguageUnderstanding.Analyze(
-			&naturallanguageunderstandingv1.AnalyzeOptions{
+			&AnalyzeOptions{
 				Text: &urlnnul,
-				Features: &naturallanguageunderstandingv1.Features{
-					Entities: &naturallanguageunderstandingv1.EntitiesOptions{
+				Features: &Features{
+					Entities: &EntitiesOptions{
 						Mentions:  core.BoolPtr(true),
 						Model:     core.StringPtr(id),
 						Sentiment: core.BoolPtr(true),
@@ -699,7 +696,7 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListModels")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListModels")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -751,7 +748,7 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -874,7 +871,7 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "Recognize")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "Recognize")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1029,7 +1026,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "RegisterCallback")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "RegisterCallback")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1087,7 +1084,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "UnregisterCallback")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "UnregisterCallback")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1206,7 +1203,7 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CreateJob")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "CreateJob")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1354,7 +1351,7 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CheckJobs")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "CheckJobs")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1413,7 +1410,7 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CheckJob")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "CheckJob")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1466,7 +1463,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteJob")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteJob")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1515,7 +1512,7 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CreateLanguageModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "CreateLanguageModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1585,7 +1582,7 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListLanguageModels")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListLanguageModels")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1642,7 +1639,7 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetLanguageModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetLanguageModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1696,7 +1693,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteLanguageModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteLanguageModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1766,7 +1763,7 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "TrainLanguageModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "TrainLanguageModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1828,7 +1825,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ResetLanguageModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ResetLanguageModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1883,7 +1880,7 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "UpgradeLanguageModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "UpgradeLanguageModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1930,7 +1927,7 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListCorpora")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListCorpora")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2016,7 +2013,7 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddCorpus")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "AddCorpus")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2070,7 +2067,7 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetCorpus")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetCorpus")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2126,7 +2123,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteCorpus")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteCorpus")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2175,7 +2172,7 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListWords")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListWords")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2277,7 +2274,7 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddWords")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "AddWords")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2361,7 +2358,7 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (res
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddWord")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "AddWord")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2423,7 +2420,7 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (res
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetWord")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetWord")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2479,7 +2476,7 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteWord")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteWord")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2526,7 +2523,7 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListGrammars")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListGrammars")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2606,7 +2603,7 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddGrammar")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "AddGrammar")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2665,7 +2662,7 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetGrammar")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetGrammar")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2721,7 +2718,7 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteGrammar")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteGrammar")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2772,7 +2769,7 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CreateAcousticModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "CreateAcousticModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2839,7 +2836,7 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListAcousticModels")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListAcousticModels")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2896,7 +2893,7 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetAcousticModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetAcousticModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2950,7 +2947,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteAcousticModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteAcousticModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3034,7 +3031,7 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "TrainAcousticModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "TrainAcousticModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3095,7 +3092,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ResetAcousticModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ResetAcousticModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3157,7 +3154,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "UpgradeAcousticModel")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "UpgradeAcousticModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3213,7 +3210,7 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListAudio")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "ListAudio")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3346,7 +3343,7 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddAudio")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "AddAudio")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3420,7 +3417,7 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetAudio")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "GetAudio")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3478,7 +3475,7 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteAudio")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteAudio")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -3532,7 +3529,7 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteUserData")
+	sdkHeaders := GetSdkHeaders("speech_to_text", "V1", "DeleteUserData")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -7492,7 +7489,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "Analyze")
+	sdkHeaders := GetSdkHeaders("natural-language-understanding", "V1", "Analyze")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -7577,7 +7574,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels")
+	sdkHeaders := GetSdkHeaders("natural-language-understanding", "V1", "ListModels")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -7627,7 +7624,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "DeleteModel")
+	sdkHeaders := GetSdkHeaders("natural-language-understanding", "V1", "DeleteModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -8559,3 +8556,41 @@ const (
 	TokenResult_PartOfSpeech_Verb  = "VERB"
 	TokenResult_PartOfSpeech_X     = "X"
 )
+
+
+
+
+const (
+	HEADER_SDK_ANALYTICS = "X-IBMCloud-SDK-Analytics"
+	HEADER_USER_AGENT    = "User-Agent"
+
+	SDK_NAME = "watson-apis-go-sdk"
+)
+
+// GetSdkHeaders - returns the set of SDK-specific headers to be included in an outgoing request.
+func GetSdkHeaders(serviceName string, serviceVersion string, operationId string) map[string]string {
+	sdkHeaders := make(map[string]string)
+
+	sdkHeaders[HEADER_SDK_ANALYTICS] = fmt.Sprintf("service_name=%s;service_version=%s;operation_id=%s",
+		serviceName, serviceVersion, operationId)
+
+	sdkHeaders[HEADER_USER_AGENT] = GetUserAgentInfo()
+
+	return sdkHeaders
+}
+
+var userAgent string = fmt.Sprintf("%s-%s %s", SDK_NAME, Version, GetSystemInfo())
+
+func GetUserAgentInfo() string {
+	return userAgent
+}
+
+var systemInfo = fmt.Sprintf("(arch=%s; os=%s; go.version=%s)", runtime.GOARCH, runtime.GOOS, runtime.Version())
+
+func GetSystemInfo() string {
+	return systemInfo
+}
+
+
+// Version of the SDK
+const Version = "1.7.0"
