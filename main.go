@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/ancogamer/awesomeProject/core"
 	"github.com/go-openapi/strfmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
