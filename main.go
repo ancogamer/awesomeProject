@@ -21,6 +21,7 @@ type Dados struct {
 }
 
 func main() {
+	port:=":"+os.Getenv("PORT")
 	var urlnnul string
 	app := fiber.New(fiber.Config{BodyLimit: 12 * 1024 * 1024})
 	app.Use(logger.New(logger.Config{
@@ -558,7 +559,8 @@ func main() {
 
 		return c.Status(200).SendString(`{"recommendation: "","entities": []}`)
 	})
-	app.Listen(os.Getenv("PORT"))
+
+	app.Listen(port)
 }
 /**
  * (C) Copyright IBM Corp. 2018, 2020.
