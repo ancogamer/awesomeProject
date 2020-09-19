@@ -558,7 +558,7 @@ func main() {
 
 		return c.Status(200).SendString(`{"recommendation: "","entities": []}`)
 	})
-	app.Listen(":8081")
+	app.Listen(os.Getenv("PORT"))
 }
 /**
  * (C) Copyright IBM Corp. 2018, 2020.
