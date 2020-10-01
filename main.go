@@ -118,7 +118,7 @@ func main() {
 			fmt.Println("ERROR:", naturalLanguageUnderstandingErr)
 			return c.Status(500).SendString("deu ruim")
 		}
-		naturalLanguageUnderstanding.Service.SetServiceURL(os.Getenv("URL2_BEHINDCODE8"))
+		naturalLanguageUnderstanding.Service.SetServiceURL(os.Getenv("URL2	_BEHINDCODE8"))
 		id := os.Getenv("MODELOID")
 
 		result1, _, responseErr1 := naturalLanguageUnderstanding.Analyze(
